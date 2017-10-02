@@ -57,7 +57,10 @@ int main(int argc, char *argv[])
     // centre the bitmap on screen
     SDL_Rect srcrect, dstrect;
     const int FPS = 30;
-    const float accelAmount = 6.0;
+    const float maxSpeed = 0.4;
+    const float accelAmount = 1.8;
+    const float initialJumpSpeed = 6.0;
+    const float gravity = 6.0;
     Uint32 fpsCounter;
     float speedx = 0;
     float speedy = 0;
@@ -107,7 +110,14 @@ int main(int argc, char *argv[])
                         accelx = 1;
                         break;
                     }
-                    if (event.key.keysym.sym == SDLK_x);
+                    if (event.key.keysym.sym == SDLK_x){
+                        if(player.getState()!=JUMPING)
+                        {
+                            accely = -1;
+                            speedy = initialJumpSpeed;
+                            player.setState(JUMPING);
+                        }
+                    }
                     if (event.key.keysym.sym == SDLK_c);
                     break;
                 }
@@ -132,13 +142,29 @@ int main(int argc, char *argv[])
             }
             } // end switch
         } // end of message processing
-        if(-2.0<speedx || speedx<2.0){
+        if(-maxSpeed<speedx || speedx<maxSpeed){
             speedx += accelAmount*accelx*(1.0/30.0);
-            if(speedx==0)
-                player.stand();
-            else
-                player.walk();
         }
+        if((speedy>-initialJumpSpeed)&&(player.getState()==JUMPING)){
+            if(player.sceneCollision()&&speedy<0){
+                player.changeDstRect((float)0, -speedy, &stage);
+                speedy = 0;
+                accely = 0;
+                player.setState(STANDING);
+                continue;
+            }
+            speedy += gravity*accely*(1.0/30.0);
+        }
+
+            if(player.getState()==JUMPING){
+                player.jump();
+            }else {
+                    if(speedx==0)
+                        player.stand();
+                    else
+                        player.walk();
+            }
+
         if(speedx>0)
             flip = SDL_FLIP_NONE;
         if(speedx<0)

@@ -1,8 +1,15 @@
 #ifndef KIRBY_H
 #define KIRBY_H
+#include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <bg.h>
+const int STANDING = 1;
+const int WALKING = 2;
+const int JUMPING = 3;
+const int INFLATED = 4;
+const int INHALED = 5;
+const int CRAWL = 6;
 
 class kirby
 {
@@ -15,11 +22,15 @@ class kirby
         void inhale();
         void inflate();
         void crawl();
+        bool sceneCollision();
         SDL_Rect* getSrcRect();
         SDL_Rect* getDstRect();
         void changeDstRect(float xChange, float yChange, bg* stage);
         void setDstRect(float x, float y);
         void hit();
+        void setState(int state);
+        int getState();
+        int getPreviousState();
         SDL_Surface* getSpriteSheet();
         virtual ~kirby();
 
