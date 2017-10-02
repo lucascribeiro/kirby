@@ -4,14 +4,14 @@ bg::bg(char* filename, int w)
 {
     this->bgImage = IMG_Load(filename);
     this->width = w;
-    this->srcrect.x = 0;
+    this->srcrect.x = 100;
     this->srcrect.y = 5;
-    this->srcrect.w = 400;
+    this->srcrect.w = 160;
     this->srcrect.h = 125;
     this->dstrect.x = 0;
     this->dstrect.y = 0;
-    this->dstrect.w = 600;
-    this->dstrect.h = 200;
+    this->dstrect.w = 300;
+    this->dstrect.h = 260;
 
 }
 
@@ -34,6 +34,14 @@ int bg::getInitialWidth()
 void bg::setInitialWidth(int w)
 {
     this->initialWidth = w;
+}
+
+int bg::getSrcRectX(){
+    return this->srcrect.x;
+}
+
+void bg::setSrcRectX(int xPos){
+    this->srcrect.x = xPos;
 }
 
 SDL_Rect* bg::getSrcrect()

@@ -14,9 +14,12 @@ class bg
         int getInitialWidth();
         void setInitialWidth(int w);
         SDL_Rect* getSrcrect();
+        int getSrcRectX();
+        void setSrcRectX(int xPos);
         SDL_Rect* getDstrect();
         SDL_Surface* getBgImage();
         void setBgImage(const char* filename);
+        float xPos = 0;
     protected:
 
     private:
