@@ -29,11 +29,25 @@ void kirby::stand(){
 
 }
 
-bool kirby::sceneCollision(){
-    if(this->dstRect.y>168)
-        return true;
-    else
-        return false;
+int kirby::sceneCollision(bg* stage){
+    SDL_Rect** stageBorders = stage->getStageBoxes();
+    int borderAmount = stage->getBorderAmount();
+    int collisions = 0;
+    SDL_Rect realKirby;
+    realKirby.x = (this->dstRect.x/1.875)+stage->getSrcRectX();
+    realKirby.w = this->dstRect.w/1.875;
+    realKirby.y = this->dstRect.y/2.08;
+    realKirby.h = this->dstRect.h/2.08;
+    for(int i=0;i<borderAmount;i++){
+        if((realKirby.y >= stageBorders[i]->y-32)&&(realKirby.y <= stageBorders[i]->y+stageBorders[i]->h)){
+            collisions = collisions|HORIZONTAL_COLLISION;
+            std::cout << stageBorders[i]->x;
+        }
+        if((realKirby.x >= stageBorders[i]->w-32)&&(realKirby.x <= stageBorders[i]->x+stageBorders[i]->w)){
+            collisions = collisions|VERTICAL_COLLISION;
+        }
+    }
+    return collisions;
 }
 
 void kirby::setState(int state){

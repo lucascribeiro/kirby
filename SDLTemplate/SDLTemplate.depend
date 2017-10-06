@@ -1026,7 +1026,7 @@
 	<SDL2/SDL_image.h>
 	<bg.h>
 
-1506984968 source:c:\users\anotador\documents\kirby\sdltemplate\main.cpp
+1507155191 source:c:\users\anotador\documents\kirby\sdltemplate\main.cpp
 	<iostream>
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
@@ -1364,19 +1364,19 @@
 	"begin_code.h"
 	"close_code.h"
 
-1506952258 c:\users\anotador\documents\kirby\sdltemplate\include\bg.h
+1507155100 c:\users\anotador\documents\kirby\sdltemplate\include\bg.h
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 
-1506984742 c:\users\anotador\documents\kirby\sdltemplate\include\kirby.h
+1507154174 c:\users\anotador\documents\kirby\sdltemplate\include\kirby.h
 	<iostream>
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 	<bg.h>
 
-1506952259 source:c:\users\anotador\documents\kirby\sdltemplate\src\bg.cpp
+1507155158 source:c:\users\anotador\documents\kirby\sdltemplate\src\bg.cpp
 	"bg.h"
 
-1506984956 source:c:\users\anotador\documents\kirby\sdltemplate\src\kirby.cpp
+1507154955 source:c:\users\anotador\documents\kirby\sdltemplate\src\kirby.cpp
 	"kirby.h"
 

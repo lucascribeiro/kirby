@@ -71,6 +71,7 @@ int main(int argc, char *argv[])
     bg stage("sprites/stage1.gif", 1760);
     kirby player;
     player.initialize();
+    stage.setStageBoxes();
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     SDL_Texture *bgTex = SDL_CreateTextureFromSurface(ren, stage.getBgImage());
     SDL_Texture *playerTex = SDL_CreateTextureFromSurface(ren, player.getSpriteSheet());
@@ -146,7 +147,7 @@ int main(int argc, char *argv[])
             speedx += accelAmount*accelx*(1.0/30.0);
         }
         if((speedy>-initialJumpSpeed)&&(player.getState()==JUMPING)){
-            if(player.sceneCollision()&&speedy<0){
+            if((player.sceneCollision(&stage)>=VERTICAL_COLLISION)&&speedy<0){
                 player.changeDstRect((float)0, -speedy, &stage);
                 speedy = 0;
                 accely = 0;

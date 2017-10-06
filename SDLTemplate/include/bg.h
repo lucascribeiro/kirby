@@ -19,13 +19,18 @@ class bg
         SDL_Rect* getDstrect();
         SDL_Surface* getBgImage();
         void setBgImage(const char* filename);
+        void setStageBoxes();
+        SDL_Rect** getStageBoxes();
+        int getBorderAmount();
         float xPos = 0;
     protected:
 
     private:
     SDL_Surface *bgImage;
+    SDL_Rect* stageBoxes;
     SDL_Rect srcrect;
     SDL_Rect dstrect;
+    int currentStage;
     int width;
     int initialWidth;
 };

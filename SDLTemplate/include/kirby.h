@@ -10,6 +10,8 @@ const int JUMPING = 3;
 const int INFLATED = 4;
 const int INHALED = 5;
 const int CRAWL = 6;
+const int VERTICAL_COLLISION = 2;
+const int HORIZONTAL_COLLISION = 1;
 
 class kirby
 {
@@ -22,7 +24,7 @@ class kirby
         void inhale();
         void inflate();
         void crawl();
-        bool sceneCollision();
+        int sceneCollision(bg* stage);
         SDL_Rect* getSrcRect();
         SDL_Rect* getDstRect();
         void changeDstRect(float xChange, float yChange, bg* stage);
