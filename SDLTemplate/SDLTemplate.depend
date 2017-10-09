@@ -673,13 +673,14 @@
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 
-1506921942 source:c:\users\t-gamer\downloads\sdltemplate_win32\kirby\sdltemplate\main.cpp
+1507572370 source:c:\users\t-gamer\downloads\sdltemplate_win32\kirby\sdltemplate\main.cpp
 	<iostream>
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 	<SDL2/SDL_ttf.h>
-	<bg.h>
-	<kirby.h>
+	"bg.h"
+	"kirby.h"
+	"enemy.h"
 
 1476932294 c:\users\t-gamer\downloads\sdltemplate_win32\kirby\sdltemplate\include\sdl2\sdl.h
 	"SDL_main.h"
@@ -1011,20 +1012,23 @@
 	"begin_code.h"
 	"close_code.h"
 
-1506922196 c:\users\t-gamer\downloads\sdltemplate_win32\kirby\sdltemplate\include\bg.h
+1507530233 c:\users\t-gamer\downloads\sdltemplate_win32\kirby\sdltemplate\include\bg.h
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
+	<iostream>
 
-1506923067 source:c:\users\t-gamer\downloads\sdltemplate_win32\kirby\sdltemplate\src\bg.cpp
+1507530308 source:c:\users\t-gamer\downloads\sdltemplate_win32\kirby\sdltemplate\src\bg.cpp
 	"bg.h"
 
-1506923004 source:c:\users\t-gamer\downloads\sdltemplate_win32\kirby\sdltemplate\src\kirby.cpp
+1507574181 source:c:\users\t-gamer\downloads\sdltemplate_win32\kirby\sdltemplate\src\kirby.cpp
 	"kirby.h"
 
-1506921954 c:\users\t-gamer\downloads\sdltemplate_win32\kirby\sdltemplate\include\kirby.h
+1507574146 c:\users\t-gamer\downloads\sdltemplate_win32\kirby\sdltemplate\include\kirby.h
+	<iostream>
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 	<bg.h>
+	"enemy.h"
 
 1507155191 source:c:\users\anotador\documents\kirby\sdltemplate\main.cpp
 	<iostream>
@@ -1379,4 +1383,12 @@
 
 1507154955 source:c:\users\anotador\documents\kirby\sdltemplate\src\kirby.cpp
 	"kirby.h"
+
+1507568886 c:\users\t-gamer\downloads\sdltemplate_win32\kirby\sdltemplate\include\enemy.h
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	<bg.h>
+
+1507570258 source:c:\users\t-gamer\downloads\sdltemplate_win32\kirby\sdltemplate\src\enemy.cpp
+	"enemy.h"
 

@@ -2,7 +2,7 @@
 #define BG_H
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-
+#include <iostream>
 
 class bg
 {
@@ -15,13 +15,12 @@ class bg
         void setInitialWidth(int w);
         SDL_Rect* getSrcrect();
         int getSrcRectX();
+        int getCurrentStage();
         void setSrcRectX(int xPos);
         SDL_Rect* getDstrect();
         SDL_Surface* getBgImage();
         void setBgImage(const char* filename);
-        void setStageBoxes();
-        SDL_Rect** getStageBoxes();
-        int getBorderAmount();
+        bool checkStageCollision(SDL_Rect* object);
         float xPos = 0;
     protected:
 

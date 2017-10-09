@@ -4,14 +4,15 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <bg.h>
+#include "enemy.h"
 const int STANDING = 1;
 const int WALKING = 2;
 const int JUMPING = 3;
 const int INFLATED = 4;
 const int INHALED = 5;
 const int CRAWL = 6;
-const int VERTICAL_COLLISION = 2;
-const int HORIZONTAL_COLLISION = 1;
+const int SQUISH = 7;
+const int DEINFLATE = 8;
 
 class kirby
 {
@@ -23,13 +24,16 @@ class kirby
         void walk();
         void inhale();
         void inflate();
+        bool deinflate();
         void crawl();
-        int sceneCollision(bg* stage);
+        void squish(bool start);
         SDL_Rect* getSrcRect();
         SDL_Rect* getDstRect();
         void changeDstRect(float xChange, float yChange, bg* stage);
         void setDstRect(float x, float y);
-        void hit();
+        void setDstRectX(int x);
+        void hit(enemy* e);
+        void isHit();
         void setState(int state);
         int getState();
         int getPreviousState();
@@ -57,9 +61,10 @@ class kirby
         */
         int step = 0;
         int repeat = 0;
+        int currentlyHit = 0;
         int walking[4] = {2,19,36,53};
-        int lives;
-        int points;
+        int lives = 6;
+        int points = 0;
 };
 
 #endif // KIRBY_H

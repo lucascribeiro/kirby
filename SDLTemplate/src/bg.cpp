@@ -13,7 +13,6 @@ bg::bg(char* filename, int w)
     this->dstrect.w = 300;
     this->dstrect.h = 260;
     this->currentStage = 1;
-
 }
 
 int bg::getWidth()
@@ -65,77 +64,60 @@ void bg::setBgImage(const char* filename)
     this->bgImage = IMG_Load(filename);
 }
 
-void bg::setStageBoxes(){
-    SDL_Rect* boxes;
-    SDL_Rect* box;
+bool bg::checkStageCollision(SDL_Rect* dstRect){
+    SDL_Rect realObject;
+    bool collisions = false;
+    realObject.x = (dstRect->x/1.875)+this->getSrcRectX()-16;
+    realObject.w = dstRect->w/1.875;
+    realObject.y = dstRect->y/2.08-15;
+    realObject.h = dstRect->h/2.08;
+    std::cout << realObject.y << std::endl;
     switch(this->currentStage){
-        case 1: box = new SDL_Rect;
-                box->x = 0;
-                box->y = 100;
-                box->h = 32;
-                box->w = 833;
-                boxes[0] = box*;
-                box = new SDL_Rect;
-                box->x = 290;
-                box->y = 84;
-                box->h = 16;
-                box->w = 42;
-                boxes[1] = box*;box = new SDL_Rect;
-                box->x = 561;
-                box->y = 36;
-                box->h = 64;
-                box->w = 32;
-                boxes[2] = box*;box = new SDL_Rect;
-                box->x = 785;
-                box->y = 84;
-                box->h = 16;
-                box->w = 48;
-                boxes[3] = box*;box = new SDL_Rect;
-                box->x = 801;
-                box->y = 68;
-                box->h = 16;
-                box->w = 32;
-                boxes[4] = box*;box = new SDL_Rect;
-                box->x = 865;
-                box->y = 68;
-                box->h = 16;
-                box->w = 48;
-                boxes[5] = box*;box = new SDL_Rect;
-                box->x = 865;
-                box->y = 84;
-                box->h = 16;
-                box->w = 64;
-                boxes[6] = box*;box = new SDL_Rect;
-                box->x = 865;
-                box->y = 100;
-                box->h = 32;
-                box->w = 401;
-                boxes[7] = box*;box = new SDL_Rect;
-                box->x = 1169;
-                box->y = 68;
-                box->h = 16;
-                box->w = 102;
-                boxes[8] = box*;box = new SDL_Rect;
-                box->x = 1201;
-                box->y = 84;
-                box->h = 16;
-                box->w = 80;
-                boxes[9] = box*;
-                this->stageBoxes = boxes;
-        default: this->stageBoxes == NULL;
+        case 1:
+                if((realObject.y>(100-32))&&(realObject.y<=100+32)&&(realObject.x>=(0-32))&&(realObject.x<=0+833-20)){
+                   collisions = true;
+                }
+
+                if((realObject.y>(84-32))&&(realObject.y<=84+16)&&(realObject.x>=(290-32))&&(realObject.x<=290+144-20)){
+                   collisions = true;
+                }
+
+                if((realObject.y>=(36-32))&&(realObject.y<=36+64)&&(realObject.x>=(561-32))&&(realObject.x<=561+32-20)){
+                    collisions = true;
+                }
+
+                if((realObject.y>=(84-32))&&(realObject.y<=84+16)&&(realObject.x>=(785-32))&&(realObject.x<=785+48-20)){
+                    collisions = true;
+                }
+
+                if((realObject.y>=(68-32))&&(realObject.y<=68+16)&&(realObject.x>=(801-32))&&(realObject.x<=801+32-20)){
+                    collisions = true;
+                }
+
+                if((realObject.y>=(68-32))&&(realObject.y<=68+16)&&(realObject.x>=(865-32))&&(realObject.x<=865+48-20)){
+                    collisions = true;
+                }
+                if((realObject.y>=(84-32))&&(realObject.y<=84+16)&&(realObject.x>=(865-32))&&(realObject.x<=865+64-20)){
+                    collisions = true;
+                }
+
+                if((realObject.y>=(100-32))&&(realObject.y<=100+32)&&(realObject.x>=(865-32))&&(realObject.x<=865+401-20)){
+                    collisions = true;
+                }
+
+                if((realObject.y>=(68-32))&&(realObject.y<=68+16)&&(realObject.x>=(11690-32))&&(realObject.x<=1169+102-20)){
+                    collisions = true;
+                }
+                if((realObject.y>=(84-32))&&(realObject.y<=84+16)&&(realObject.x>=(1201-32))&&(realObject.x<=1201+80-20)){
+                    collisions = true;
+                }
+                return collisions;
+        default: return false;
     }
 }
 
-SDL_Rect* bg::getStageBoxes(){
-    return this->stageBoxes;
-}
-
-int bg::getBorderAmount(){
-    switch(currentStage){
-        case 1: return 10;
-        default: return 0;
-    }
-
+int bg::getCurrentStage(){
+    return this->currentStage;
 }
 
 bg::~bg()

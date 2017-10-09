@@ -26,28 +26,26 @@ void kirby::stand(){
     this->previousState = STANDING;
     this->srcRect.x = 2;
     this->srcRect.y = 11;
-
 }
 
-int kirby::sceneCollision(bg* stage){
-    SDL_Rect** stageBorders = stage->getStageBoxes();
-    int borderAmount = stage->getBorderAmount();
-    int collisions = 0;
-    SDL_Rect realKirby;
-    realKirby.x = (this->dstRect.x/1.875)+stage->getSrcRectX();
-    realKirby.w = this->dstRect.w/1.875;
-    realKirby.y = this->dstRect.y/2.08;
-    realKirby.h = this->dstRect.h/2.08;
-    for(int i=0;i<borderAmount;i++){
-        if((realKirby.y >= stageBorders[i]->y-32)&&(realKirby.y <= stageBorders[i]->y+stageBorders[i]->h)){
-            collisions = collisions|HORIZONTAL_COLLISION;
-            std::cout << stageBorders[i]->x;
-        }
-        if((realKirby.x >= stageBorders[i]->w-32)&&(realKirby.x <= stageBorders[i]->x+stageBorders[i]->w)){
-            collisions = collisions|VERTICAL_COLLISION;
-        }
+void kirby::crawl(){
+    this->state = CRAWL;
+    this->previousState = CRAWL;
+    this->srcRect.x = 36;
+    this->srcRect.y = 11;
+}
+
+void kirby::squish(bool start){
+    this->state = SQUISH;
+    if(start){
+        this->repeat = 0;
     }
-    return collisions;
+    this->srcRect.x = 19;
+    this->srcRect.y = 11;
+    this->repeat++;
+    if(repeat>4){
+        this->state = this->previousState;
+    }
 }
 
 void kirby::setState(int state){
@@ -71,8 +69,68 @@ void kirby::jump(){
     if(repeat>60)
         this->srcRect.x = 19;
     this->repeat++;
-    std::cout << repeat << std::endl;
+}
 
+void kirby::inflate(){
+    if(this->previousState!=INFLATED){
+        this->repeat=0;
+        this->srcRect.x = 2;
+        this->srcRect.y = 62;
+        this->srcRect.h = 24;
+        this->state = INFLATED;
+        this->previousState = INFLATED;
+    }
+    if(repeat <=2){
+        this->srcRect.x = 19;
+        this->srcRect.y = 62;
+        this->srcRect.h = 24;
+        this->dstRect.h = 48;
+        this->dstRect.y-=4;
+        this->yPos-=4;
+    }else{
+        if(repeat <= 4){
+            this->srcRect.x = 36;
+            this->srcRect.y = 62;
+            this->srcRect.w = 23;
+            this->dstRect.w = 48;
+        }else{
+            if((repeat-5)%10<5){
+                this->srcRect.x = 60;
+                this->srcRect.y = 62;
+            }else{
+                this->srcRect.x = 84;
+                this->srcRect.y = 62;
+            }
+        }
+    }
+    repeat++;
+
+}
+
+bool kirby::deinflate(){
+    if(this->previousState = INFLATED){
+        repeat = 0;
+    }
+    if(repeat<=2){
+        this->srcRect.x = 108;
+        this->srcRect.y = 62;
+        repeat++;
+        return false;
+    }
+    if(repeat<=4){
+        this->srcRect.x = 132;
+        this->srcRect.y = 62;
+        repeat++;
+        return false;
+    }
+    if(repeat<=6){
+        this->state = JUMPING;
+        this->srcRect.h = 16;
+        this->srcRect.w = 16;
+        repeat++;
+        return false;
+    }
+    return true;
 }
 
 void kirby::changeDstRect(float xChange, float yChange, bg* stage){
@@ -114,6 +172,28 @@ void kirby::walk(){
     }
 }
 
+void kirby::hit(enemy* e){
+    if(this->dstRect.x<=e->getDstRect()->x+32 && this->dstRect.x>=e->getDstRect()->x-31){
+        if(currentlyHit==0)
+            this->currentlyHit = 1;
+            this->lives--;
+            //std::cout << this->lives << std::endl;
+    }
+}
+
+void kirby::isHit(){
+    if(this->currentlyHit>0){
+        if(currentlyHit%4<2){
+            this->srcRect.h = 0;
+        }else{
+            this->srcRect.h = 16;
+        }
+        this->currentlyHit++;
+        if(this->currentlyHit>46)
+            this->currentlyHit = 0;
+    }
+}
+
 SDL_Surface* kirby::getSpriteSheet(){
     return this->spriteSheet;
 }
@@ -126,6 +206,9 @@ SDL_Rect* kirby::getDstRect(){
     return &this->dstRect;
 }
 
+void kirby::setDstRectX(int x){
+    this->dstRect.x = x;
+}
 kirby::~kirby()
 {
     //dtor

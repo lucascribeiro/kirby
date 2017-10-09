@@ -40,9 +40,11 @@
 			<Add directory="libs" />
 		</Linker>
 		<Unit filename="include/bg.h" />
+		<Unit filename="include/enemy.h" />
 		<Unit filename="include/kirby.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/bg.cpp" />
+		<Unit filename="src/enemy.cpp" />
 		<Unit filename="src/kirby.cpp" />
 		<Extensions>
 			<code_completion />

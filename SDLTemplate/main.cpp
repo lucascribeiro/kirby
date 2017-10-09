@@ -2,13 +2,27 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include <bg.h>
-#include <kirby.h>
+#include "bg.h"
+#include "kirby.h"
+#include "enemy.h"
 
 using namespace std;
 
+enemy enemies[20];
+void getEnemies(bg* stage){
+     switch(stage->getCurrentStage()){
+       case 1:     if(stage->getSrcRectX()+160>=273 && stage->getSrcRectX()+160<=283 && enemies[0].getType()==0){
+                        enemies[0].initialize(1, 273.0, 80.0);
+                    }
+                    break;
+       default: break;
+     }
+}
+
 int main(int argc, char *argv[])
 {
+    for (int i=0;i<20;i++)
+        enemies[i].initialize(0,0,0);
     // initialize SDL video
     if ( SDL_Init( SDL_INIT_VIDEO ) < 0 )
     {
@@ -35,8 +49,8 @@ int main(int argc, char *argv[])
     }
 
     // load an image
-    /*SDL_Surface* bmp = IMG_Load("cb.bmp"); //SDL_LoadBMP("cb.bmp");
-    if (!bmp)
+    SDL_Surface* enemySurf = IMG_Load("sprites/enemies.png"); //SDL_LoadBMP("cb.bmp");
+    if (!enemySurf)
     {
         SDL_DestroyRenderer(ren);
         SDL_DestroyWindow(win);
@@ -44,20 +58,20 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    SDL_Texture *tex = SDL_CreateTextureFromSurface(ren, bmp);
-    SDL_FreeSurface(bmp);
-    if(!tex)
+    SDL_Texture *enemyTex = SDL_CreateTextureFromSurface(ren, enemySurf);
+    SDL_FreeSurface(enemySurf);
+    if(!enemyTex)
     {
         SDL_DestroyRenderer(ren);
         SDL_DestroyWindow(win);
         cout << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << endl;
         return 1;
     }
-    */
+
     // centre the bitmap on screen
     SDL_Rect srcrect, dstrect;
     const int FPS = 30;
-    const float maxSpeed = 0.4;
+    const float maxSpeed = 1.6;
     const float accelAmount = 1.8;
     const float initialJumpSpeed = 6.0;
     const float gravity = 6.0;
@@ -71,7 +85,6 @@ int main(int argc, char *argv[])
     bg stage("sprites/stage1.gif", 1760);
     kirby player;
     player.initialize();
-    stage.setStageBoxes();
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     SDL_Texture *bgTex = SDL_CreateTextureFromSurface(ren, stage.getBgImage());
     SDL_Texture *playerTex = SDL_CreateTextureFromSurface(ren, player.getSpriteSheet());
@@ -102,13 +115,30 @@ int main(int argc, char *argv[])
                         break;
                     }
                     if (event.key.keysym.sym == SDLK_UP);
-                    if (event.key.keysym.sym == SDLK_DOWN);
+                    if (event.key.keysym.sym == SDLK_DOWN){
+                        if(player.getState()==STANDING||player.getState()==WALKING){
+                            accelx = 0;
+                            speedx = 0;
+                            player.setState(CRAWL);
+                        }
+                        break;
+                    }
                     if (event.key.keysym.sym == SDLK_LEFT){
-                        accelx = -1;
+                        if(player.getState()!=CRAWL){
+                                accelx = -1;
+                        }
+                        if(player.getState() == STANDING){
+                            player.setState(WALKING);
+                        }
                         break;
                     }
                     if (event.key.keysym.sym == SDLK_RIGHT){
-                        accelx = 1;
+                        if(player.getState()!=CRAWL){
+                                accelx = 1;
+                        }
+                        if(player.getState() == STANDING){
+                            player.setState(WALKING);
+                        }
                         break;
                     }
                     if (event.key.keysym.sym == SDLK_x){
@@ -125,15 +155,23 @@ int main(int argc, char *argv[])
             case SDL_KEYUP:
             {
                 if (event.key.keysym.sym == SDLK_UP);
-                if (event.key.keysym.sym == SDLK_DOWN);
+                if (event.key.keysym.sym == SDLK_DOWN){
+                    player.setState(STANDING);
+                }
                 if (event.key.keysym.sym == SDLK_LEFT){
                     speedx = 0;
                     accelx = 0;
+                    if(player.getState() == WALKING){
+                        player.setState(STANDING);
+                    }
                     break;
                 }
                 if (event.key.keysym.sym == SDLK_RIGHT){
                     speedx = 0;
                     accelx = 0;
+                    if(player.getState() == WALKING){
+                        player.setState(STANDING);
+                    }
                     break;
                 }
                 if (event.key.keysym.sym == SDLK_x);
@@ -145,39 +183,85 @@ int main(int argc, char *argv[])
         } // end of message processing
         if(-maxSpeed<speedx || speedx<maxSpeed){
             speedx += accelAmount*accelx*(1.0/30.0);
+            if(speedx*accelx>maxSpeed)
+                speedx = accelx*maxSpeed;
         }
-        if((speedy>-initialJumpSpeed)&&(player.getState()==JUMPING)){
-            if((player.sceneCollision(&stage)>=VERTICAL_COLLISION)&&speedy<0){
-                player.changeDstRect((float)0, -speedy, &stage);
-                speedy = 0;
-                accely = 0;
+
+        if(player.getState()!=JUMPING){
+            player.changeDstRect((float)0, -8, &stage);
+            cout << stage.checkStageCollision(player.getDstRect()) << player.getDstRect()->y << endl;
+
+            if((stage.checkStageCollision(player.getDstRect()))){
+                player.changeDstRect((float)0, 8, &stage);
+            }else{
+                player.changeDstRect((float)0, 8, &stage);
+                speedy=0;
+                player.setState(JUMPING);
+            }
+        }
+
+        if((player.getState()==JUMPING)){
+            //7cout << stage.checkStageCollision(player.getDstRect()) << endl;
+            player.changeDstRect((float)0, speedy, &stage);
+            if((stage.checkStageCollision(player.getDstRect()))){
                 player.setState(STANDING);
-                continue;
+                player.changeDstRect((float)0, -speedy+2, &stage);
+                speedy = 0;
             }
             speedy += gravity*accely*(1.0/30.0);
         }
 
             if(player.getState()==JUMPING){
                 player.jump();
-            }else {
-                    if(speedx==0)
-                        player.stand();
-                    else
-                        player.walk();
+            }
+            if(player.getState()==STANDING){
+                if(speedx!=0){
+                    player.setState(WALKING);
+                }else{
+                    player.stand();
+                }
+            }
+            if(player.getState()==WALKING){
+                player.walk();
+            }
+            if(player.getState()==CRAWL){
+                player.crawl();
             }
 
         if(speedx>0)
             flip = SDL_FLIP_NONE;
         if(speedx<0)
             flip = SDL_FLIP_HORIZONTAL;
-        player.changeDstRect(speedx, speedy, &stage);
+        player.changeDstRect(speedx, 0, &stage);
+        if(stage.checkStageCollision(player.getDstRect())){
+            player.changeDstRect(-speedx,0, &stage);
+            cout << stage.checkStageCollision(player.getDstRect()) << endl;
+        }
+        if(player.getDstRect()->x<=1){
+            player.changeDstRect(-speedx,0,&stage);
+        }
 
+        getEnemies(&stage);
+        for(int i = 0; i<20;i++){
+            if((enemies[i].getType()!=0));
+                enemies[i].movement(&stage);
+        }
         // DRAWING STARTS HERE
 
         // clear screen
         SDL_RenderClear(ren);
         SDL_RenderCopy(ren, bgTex, stage.getSrcrect(), stage.getDstrect());
         SDL_RenderCopyEx(ren, playerTex, player.getSrcRect(), player.getDstRect(), 0.0, NULL, flip);
+        for(int i = 0;i<20;i++){
+            if(enemies[i].getType()!=0){
+                cout << "enemy" << i << endl;
+                player.hit(&enemies[i]);
+                SDL_RenderCopyEx(ren, enemyTex, enemies[i].getSrcRect(), enemies[i].getDstRect(), 0.0, NULL, SDL_FLIP_HORIZONTAL);
+                if(enemies[i].getDstRect()->x < -60)
+                    enemies[i].initialize(0,0,0);
+            }
+        }
+        player.isHit();
         SDL_RenderPresent(ren);
         // DRAWING ENDS HERE
         if(1000/FPS > SDL_GetTicks()-fpsCounter){
