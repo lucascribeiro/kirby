@@ -11,8 +11,11 @@ using namespace std;
 enemy enemies[20];
 void getEnemies(bg* stage){
      switch(stage->getCurrentStage()){
-       case 1:     if(stage->getSrcRectX()+160>=273 && stage->getSrcRectX()+160<=283 && enemies[0].getType()==0){
-                        enemies[0].initialize(1, 273.0, 80.0);
+       case 1:     if((stage->getSrcRectX()+160>=273 && stage->getSrcRectX()+160<=283 && enemies[0].getType()==0)||(stage->getSrcRectX()>=289 && stage->getSrcRectX()<=299 && enemies[0].getType()==0)){
+                        enemies[0].initialize(6, 273.0, 80.0);
+                    }
+                    if(stage->getSrcRectX()+160>=400 && stage->getSrcRectX()+160<=410 && enemies[1].getType()==0||(stage->getSrcRectX()>=416 && stage->getSrcRectX()<=426 && enemies[0].getType()==0)){
+                        enemies[1].initialize(3, 400.0, 40.0);
                     }
                     break;
        default: break;
@@ -79,7 +82,7 @@ int main(int argc, char *argv[])
     float speedx = 0;
     float speedy = 0;
     float accelx = 0;
-    float accely = 0;
+    const float accely = -1;
     int w, h;
     SDL_GetWindowSize(win, &w, &h);
     bg stage("sprites/stage1.gif", 1760);
@@ -114,7 +117,10 @@ int main(int argc, char *argv[])
                         done = true;
                         break;
                     }
-                    if (event.key.keysym.sym == SDLK_UP);
+                    if (event.key.keysym.sym == SDLK_UP){
+                        speedy = initialJumpSpeed/2.0;
+                        player.setState(INFLATED);
+                    }
                     if (event.key.keysym.sym == SDLK_DOWN){
                         if(player.getState()==STANDING||player.getState()==WALKING){
                             accelx = 0;
@@ -142,21 +148,26 @@ int main(int argc, char *argv[])
                         break;
                     }
                     if (event.key.keysym.sym == SDLK_x){
-                        if(player.getState()!=JUMPING)
+                        if(player.getState()!=JUMPING && player.getState()!=INFLATED)
                         {
-                            accely = -1;
                             speedy = initialJumpSpeed;
                             player.setState(JUMPING);
                         }
                     }
-                    if (event.key.keysym.sym == SDLK_c);
+                    if (event.key.keysym.sym == SDLK_c){
+                        if(player.getState()==INFLATED){
+                            player.setState(DEINFLATE);
+                        }
+                    }
                     break;
                 }
             case SDL_KEYUP:
             {
                 if (event.key.keysym.sym == SDLK_UP);
                 if (event.key.keysym.sym == SDLK_DOWN){
-                    player.setState(STANDING);
+                    if(player.getState()==CRAWL){
+                        player.setState(STANDING);
+                    }
                 }
                 if (event.key.keysym.sym == SDLK_LEFT){
                     speedx = 0;
@@ -187,7 +198,7 @@ int main(int argc, char *argv[])
                 speedx = accelx*maxSpeed;
         }
 
-        if(player.getState()!=JUMPING){
+        if(player.getState()!=JUMPING && player.getState()!=INFLATED){
             player.changeDstRect((float)0, -8, &stage);
             cout << stage.checkStageCollision(player.getDstRect()) << player.getDstRect()->y << endl;
 
@@ -196,7 +207,9 @@ int main(int argc, char *argv[])
             }else{
                 player.changeDstRect((float)0, 8, &stage);
                 speedy=0;
-                player.setState(JUMPING);
+                if(player.getState()!=DEINFLATE){
+                    player.setState(JUMPING);
+                }
             }
         }
 
@@ -210,9 +223,24 @@ int main(int argc, char *argv[])
             }
             speedy += gravity*accely*(1.0/30.0);
         }
+        if((player.getState()==INFLATED)){
+            //7cout << stage.checkStageCollision(player.getDstRect()) << endl;
+            player.changeDstRect((float)0, speedy, &stage);
+            if((stage.checkStageCollision(player.getDstRect()))){
+                player.changeDstRect((float)0, -speedy+2, &stage);
+                speedy = 0;
+            }
+            speedy += gravity*accely*(1.0/30.0);
+        }
 
             if(player.getState()==JUMPING){
                 player.jump();
+            }
+            if(player.getState()==INFLATED){
+                player.inflate();
+            }
+            if(player.getState()==DEINFLATE){
+                player.deinflate();
             }
             if(player.getState()==STANDING){
                 if(speedx!=0){
@@ -256,7 +284,7 @@ int main(int argc, char *argv[])
             if(enemies[i].getType()!=0){
                 cout << "enemy" << i << endl;
                 player.hit(&enemies[i]);
-                SDL_RenderCopyEx(ren, enemyTex, enemies[i].getSrcRect(), enemies[i].getDstRect(), 0.0, NULL, SDL_FLIP_HORIZONTAL);
+                SDL_RenderCopyEx(ren, enemyTex, enemies[i].getSrcRect(), enemies[i].getDstRect(), 0.0, NULL, enemies[i].getFlip());
                 if(enemies[i].getDstRect()->x < -60)
                     enemies[i].initialize(0,0,0);
             }

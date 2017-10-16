@@ -43,7 +43,7 @@ void kirby::squish(bool start){
     this->srcRect.x = 19;
     this->srcRect.y = 11;
     this->repeat++;
-    if(repeat>4){
+    if(this->repeat>4){
         this->state = this->previousState;
     }
 }
@@ -66,7 +66,7 @@ void kirby::jump(){
     this->previousState = JUMPING;
     this->srcRect.x = 2;
     this->srcRect.y = 45;
-    if(repeat>60)
+    if(this->repeat>60)
         this->srcRect.x = 19;
     this->repeat++;
 }
@@ -80,7 +80,7 @@ void kirby::inflate(){
         this->state = INFLATED;
         this->previousState = INFLATED;
     }
-    if(repeat <=2){
+    if(this->repeat <=5){
         this->srcRect.x = 19;
         this->srcRect.y = 62;
         this->srcRect.h = 24;
@@ -88,13 +88,13 @@ void kirby::inflate(){
         this->dstRect.y-=4;
         this->yPos-=4;
     }else{
-        if(repeat <= 4){
+        if(this->repeat <= 10){
             this->srcRect.x = 36;
             this->srcRect.y = 62;
             this->srcRect.w = 23;
             this->dstRect.w = 48;
         }else{
-            if((repeat-5)%10<5){
+            if((this->repeat-10)%20<10){
                 this->srcRect.x = 60;
                 this->srcRect.y = 62;
             }else{
@@ -103,34 +103,34 @@ void kirby::inflate(){
             }
         }
     }
-    repeat++;
+    this->repeat++;
 
 }
 
-bool kirby::deinflate(){
-    if(this->previousState = INFLATED){
-        repeat = 0;
+void kirby::deinflate(){
+    if(this->previousState == INFLATED){
+        this->repeat = 0;
+        this->state = DEINFLATE;
+        this->previousState = DEINFLATE;
     }
-    if(repeat<=2){
+    if(this->repeat<=5){
         this->srcRect.x = 108;
         this->srcRect.y = 62;
-        repeat++;
-        return false;
+    }else{
+        if(this->repeat<=10){
+            this->srcRect.x = 132;
+            this->srcRect.y = 62;
+        }else{
+            if(this->repeat<=15){
+                this->state = STANDING;
+                this->srcRect.h = 16;
+                this->srcRect.w = 16;
+                this->dstRect.h = 32;
+                this->dstRect.w = 32;
+            }
+        }
     }
-    if(repeat<=4){
-        this->srcRect.x = 132;
-        this->srcRect.y = 62;
-        repeat++;
-        return false;
-    }
-    if(repeat<=6){
-        this->state = JUMPING;
-        this->srcRect.h = 16;
-        this->srcRect.w = 16;
-        repeat++;
-        return false;
-    }
-    return true;
+    this->repeat++;
 }
 
 void kirby::changeDstRect(float xChange, float yChange, bg* stage){
@@ -157,7 +157,7 @@ void kirby::changeDstRect(float xChange, float yChange, bg* stage){
 
 void kirby::walk(){
     this->state = WALKING;
-    this->repeat = (repeat+1)%5;
+    this->repeat = (this->repeat+1)%5;
     if(this->repeat==0){
         if(this->previousState==WALKING){
             this->step = (step+1)%4;
@@ -173,11 +173,11 @@ void kirby::walk(){
 }
 
 void kirby::hit(enemy* e){
-    if(this->dstRect.x<=e->getDstRect()->x+32 && this->dstRect.x>=e->getDstRect()->x-31){
+    if(this->dstRect.x<=e->getDstRect()->x+32 && this->dstRect.x>=e->getDstRect()->x-31 && this->dstRect.y<=e->getDstRect()->y+32 && this->dstRect.y>=e->getDstRect()->y-31){
         if(currentlyHit==0)
             this->currentlyHit = 1;
             this->lives--;
-            //std::cout << this->lives << std::endl;
+            std::cout << this->lives << std::endl;
     }
 }
 

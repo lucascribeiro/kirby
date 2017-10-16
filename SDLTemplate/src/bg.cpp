@@ -71,44 +71,47 @@ bool bg::checkStageCollision(SDL_Rect* dstRect){
     realObject.w = dstRect->w/1.875;
     realObject.y = dstRect->y/2.08-15;
     realObject.h = dstRect->h/2.08;
+    int h = 32;
+    if(dstRect->h==48)
+        h = 42;
     std::cout << realObject.y << std::endl;
     switch(this->currentStage){
         case 1:
-                if((realObject.y>(100-32))&&(realObject.y<=100+32)&&(realObject.x>=(0-32))&&(realObject.x<=0+833-20)){
+                if((realObject.y>(100-h))&&(realObject.y<=100+32)&&(realObject.x>=(0-h))&&(realObject.x<=0+833-20)){
                    collisions = true;
                 }
 
-                if((realObject.y>(84-32))&&(realObject.y<=84+16)&&(realObject.x>=(290-32))&&(realObject.x<=290+144-20)){
+                if((realObject.y>(84-h))&&(realObject.y<=84+16)&&(realObject.x>=(290-h))&&(realObject.x<=290+144-20)){
                    collisions = true;
                 }
 
-                if((realObject.y>=(36-32))&&(realObject.y<=36+64)&&(realObject.x>=(561-32))&&(realObject.x<=561+32-20)){
+                if((realObject.y>=(36-h))&&(realObject.y<=36+64)&&(realObject.x>=(561-h))&&(realObject.x<=561+32-20)){
                     collisions = true;
                 }
 
-                if((realObject.y>=(84-32))&&(realObject.y<=84+16)&&(realObject.x>=(785-32))&&(realObject.x<=785+48-20)){
+                if((realObject.y>=(84-h))&&(realObject.y<=84+16)&&(realObject.x>=(785-h))&&(realObject.x<=785+48-20)){
                     collisions = true;
                 }
 
-                if((realObject.y>=(68-32))&&(realObject.y<=68+16)&&(realObject.x>=(801-32))&&(realObject.x<=801+32-20)){
+                if((realObject.y>=(68-h))&&(realObject.y<=68+16)&&(realObject.x>=(801-h))&&(realObject.x<=801+32-20)){
                     collisions = true;
                 }
 
-                if((realObject.y>=(68-32))&&(realObject.y<=68+16)&&(realObject.x>=(865-32))&&(realObject.x<=865+48-20)){
+                if((realObject.y>=(68-h))&&(realObject.y<=68+16)&&(realObject.x>=(865-h))&&(realObject.x<=865+48-20)){
                     collisions = true;
                 }
-                if((realObject.y>=(84-32))&&(realObject.y<=84+16)&&(realObject.x>=(865-32))&&(realObject.x<=865+64-20)){
-                    collisions = true;
-                }
-
-                if((realObject.y>=(100-32))&&(realObject.y<=100+32)&&(realObject.x>=(865-32))&&(realObject.x<=865+401-20)){
+                if((realObject.y>=(84-h))&&(realObject.y<=84+16)&&(realObject.x>=(865-h))&&(realObject.x<=865+64-20)){
                     collisions = true;
                 }
 
-                if((realObject.y>=(68-32))&&(realObject.y<=68+16)&&(realObject.x>=(11690-32))&&(realObject.x<=1169+102-20)){
+                if((realObject.y>=(100-h))&&(realObject.y<=100+32)&&(realObject.x>=(865-h))&&(realObject.x<=865+401-20)){
                     collisions = true;
                 }
-                if((realObject.y>=(84-32))&&(realObject.y<=84+16)&&(realObject.x>=(1201-32))&&(realObject.x<=1201+80-20)){
+
+                if((realObject.y>=(68-h))&&(realObject.y<=68+16)&&(realObject.x>=(11690-h))&&(realObject.x<=1169+102-20)){
+                    collisions = true;
+                }
+                if((realObject.y>=(84-h))&&(realObject.y<=84+16)&&(realObject.x>=(1201-h))&&(realObject.x<=1201+80-20)){
                     collisions = true;
                 }
                 return collisions;

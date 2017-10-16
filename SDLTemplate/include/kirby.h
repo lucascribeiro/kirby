@@ -24,7 +24,7 @@ class kirby
         void walk();
         void inhale();
         void inflate();
-        bool deinflate();
+        void deinflate();
         void crawl();
         void squish(bool start);
         SDL_Rect* getSrcRect();
@@ -51,14 +51,6 @@ class kirby
         SDL_Surface* spriteSheet;
         int previousState;
         int state;
-        /*
-        1 - standing
-        2 - walking
-        3 - jumping
-        4 - inflated
-        5 - inhaled
-        6 - crawl
-        */
         int step = 0;
         int repeat = 0;
         int currentlyHit = 0;
